@@ -1,5 +1,6 @@
-#Название программы
-name_prog = "================== \nIT ASSISTANT v0.2 \n=================="
+import platform
+
+name_prog = "================== \nIT ASSISTANT v0.3 \n=================="
 
 print()
 print(name_prog)
@@ -17,7 +18,11 @@ check_net = "2. Проверка интернет-соединения"
 net_set = "3. Сетевые настройки"
 exit_menu = "4. Выход"
 
-
+os_name = platform.system()
+os_version = platform.release()
+architecture = platform.machine()
+pc_name = platform.node()
+processor_name = platform.processor()
 
 while True:
     print(info_pc)
@@ -33,6 +38,13 @@ while True:
 
     if choice == 1:
         print("Получение информации о системе...")
+        print()
+        print("Операционная система:", os_name)
+        print("Версия:", os_version)
+        print("Архитектура:", architecture)
+        print("Имя компьютера:", pc_name)
+        print("Процессор:", processor_name)
+        print()
     elif choice == 2:
         print("Проверка интернет-соединения...")
     elif choice == 3:
@@ -45,3 +57,5 @@ while True:
 
     if choice == 4:
         break
+
+

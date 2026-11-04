@@ -1,6 +1,11 @@
 import platform
+import socket
+import subprocess
+import sys
+import speedtest
 
-name_prog = "================== \nIT ASSISTANT v0.3 \n=================="
+sys.stdout.reconfigure(encoding="utf-8")
+name_prog = "================== \nIT ASSISTANT v0.4 \n=================="
 
 print()
 print(name_prog)
@@ -47,6 +52,35 @@ while True:
         print()
     elif choice == 2:
         print("Проверка интернет-соединения...")
+        print()
+
+        try:
+            connection = socket.create_connection(("8.8.8.8", 53), timeout=5)
+            connection.close()
+            print("Интернет подключён!")
+
+        except OSError:
+            print("Инетрнет не подключён!")
+        print()
+
+        result = subprocess.run(
+            ["ping", "8.8.8.8"],
+            capture_output=True,
+            text=True,
+            encoding="cp866",
+            errors="replace"
+        )
+
+        print(result.stdout)
+
+        print()
+
+        st = speedtest.Speedtest()
+        download_speed = st.download() / 1_000_000
+        upload_speed = st.upload() / 1_000_000
+        print("Download:", round(download_speed, 2), "Мбит/с")
+        print("Upload:", round(upload_speed, 2), "Мбит/с")
+        print()
     elif choice == 3:
         print("Получение сетевых настроек компьютера...")
     elif choice == 4:

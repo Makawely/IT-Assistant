@@ -5,7 +5,7 @@ import sys
 import speedtest
 
 sys.stdout.reconfigure(encoding="utf-8")
-name_prog = "================== \nIT ASSISTANT v0.4 \n=================="
+name_prog = "================== \nIT ASSISTANT v0.5\n=================="
 
 print()
 print(name_prog)
@@ -21,7 +21,11 @@ print()
 info_pc = "1. Информация о компьютере"
 check_net = "2. Проверка интернет-соединения"
 net_set = "3. Сетевые настройки"
-exit_menu = "4. Выход"
+pc_management = "4. Управление компьютером"
+net_diagnostic = "5. Диагностика сети"
+process_management = "6. Управление процессами"
+admin_tools = "7. Инструменты администратора"
+exit_menu = "8. Выход"
 
 os_name = platform.system()
 os_version = platform.release()
@@ -33,6 +37,10 @@ while True:
     print(info_pc)
     print(check_net)
     print(net_set)
+    print(pc_management)
+    print(net_diagnostic)
+    print(process_management)
+    print(admin_tools)
     print(exit_menu)
 
     print()
@@ -53,14 +61,14 @@ while True:
     elif choice == 2:
         print("Проверка интернет-соединения...")
         print()
-
         try:
             connection = socket.create_connection(("8.8.8.8", 53), timeout=5)
             connection.close()
             print("Интернет подключён!")
+            print()
 
         except OSError:
-            print("Инетрнет не подключён!")
+            print("Интернет не подключён!")
         print()
 
         result = subprocess.run(
@@ -83,13 +91,29 @@ while True:
         print()
     elif choice == 3:
         print("Получение сетевых настроек компьютера...")
+        print()
+        subprocess.run(["ipconfig"])
+        print()
     elif choice == 4:
+        print("Открытие инструментов управления компьютером...")
+        print()
+    elif choice == 5:
+        print("Запуск диагностики сети...")
+        print()
+    elif choice == 6:
+        print("Открытие диспетчера процессов...")
+        print()
+    elif choice == 7:
+        print("Запуск инструментов администратора...")
+        print()
+    elif choice == 8:
         print("Выполняется выход...")
+
     else:
         print("Неверный выбор! Попробуйте снова.")
 
 
-    if choice == 4:
+    if choice == 8:
         break
 
 

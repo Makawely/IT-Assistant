@@ -3,9 +3,10 @@ import socket
 import subprocess
 import sys
 import speedtest
+import os
 
 sys.stdout.reconfigure(encoding="utf-8")
-name_prog = "================== \nIT ASSISTANT v0.5\n=================="
+name_prog = "================== \nIT ASSISTANT v0.6\n=================="
 
 print()
 print(name_prog)
@@ -26,12 +27,19 @@ net_diagnostic = "5. Диагностика сети"
 process_management = "6. Управление процессами"
 admin_tools = "7. Инструменты администратора"
 exit_menu = "8. Выход"
+task_manager = "1. Диспетчер задач"
+control_panel = "2. Панель управления"
+restart_computer = "3. Перезагрузить компьютер"
+back_menu = "4. Вернуться в главное меню"
+
+
 
 os_name = platform.system()
 os_version = platform.release()
 architecture = platform.machine()
 pc_name = platform.node()
 processor_name = platform.processor()
+
 
 while True:
     print(info_pc)
@@ -44,11 +52,15 @@ while True:
     print(exit_menu)
 
     print()
-
-    choice = int(input("Выберите действие: "))
+    try:
+        choice = int(input("Выберите действие: "))
+    except ValueError:
+        print()
+        print("Ошибка! Введите число от 1 до 8.")
+        print()
+        continue
 
     print()
-
     if choice == 1:
         print("Получение информации о системе...")
         print()
@@ -97,6 +109,63 @@ while True:
     elif choice == 4:
         print("Открытие инструментов управления компьютером...")
         print()
+        while True:
+
+            print(task_manager)
+            print(control_panel)
+            print(restart_computer)
+            print(back_menu)
+            print()
+
+            try:
+                sub_choice = int(input("Выберите действие: "))
+            except ValueError:
+                print()
+                print("Ошибка! Введите число от 1 до 4.")
+                print()
+                continue
+
+            if sub_choice == 1:
+                print("Выполняется действие... ")
+                os.startfile("taskmgr.exe")
+                print()
+            elif sub_choice == 2:
+                print("Выполняется действие... ")
+                os.startfile("control.exe")
+                print()
+            elif sub_choice == 3:
+                print()
+                confirm = input("Перезагрузить компьютер? (да/нет): ").lower()
+                print()
+                if confirm == "да":
+                    confirm_again = input("Вы точно хотите перезагрузить компьютер? (да/нет): ").lower()
+                    print()
+                    if confirm_again == "да":
+                        print("Перезагрузка подтверждена!")
+                        subprocess.run(["shutdown", "/r", "/t", "10"])
+                        print()
+                    elif confirm_again == "нет":
+                        print("Перезагрузка отменена!")
+                        print()
+                    else:
+                        print("Неверный ответ!")
+                        print()
+
+                elif confirm == "нет":
+                    print("Отмена перезагрузки... ")
+                else:
+                    print("Ошибка! Введите да или нет!")
+            elif sub_choice == 4:
+                print()
+                print("Выход в главное меню... ")
+                print()
+            else:
+                print("Неверный выбор! Попробуйте снова.")
+                print()
+
+            if sub_choice == 4:
+                break
+
     elif choice == 5:
         print("Запуск диагностики сети...")
         print()
@@ -111,7 +180,7 @@ while True:
 
     else:
         print("Неверный выбор! Попробуйте снова.")
-
+        print()
 
     if choice == 8:
         break

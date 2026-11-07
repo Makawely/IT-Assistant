@@ -6,7 +6,7 @@ import speedtest
 import os
 
 sys.stdout.reconfigure(encoding="utf-8")
-name_prog = "================== \nIT ASSISTANT v0.6\n=================="
+name_prog = "================== \nIT ASSISTANT v0.7\n=================="
 
 print()
 print(name_prog)
@@ -19,6 +19,7 @@ print("Здравствуйте", name + "!")
 
 print()
 
+# Основное меню переменные
 info_pc = "1. Информация о компьютере"
 check_net = "2. Проверка интернет-соединения"
 net_set = "3. Сетевые настройки"
@@ -27,13 +28,23 @@ net_diagnostic = "5. Диагностика сети"
 process_management = "6. Управление процессами"
 admin_tools = "7. Инструменты администратора"
 exit_menu = "8. Выход"
+
+# 4-ый пункт меню переменные
 task_manager = "1. Диспетчер задач"
 control_panel = "2. Панель управления"
 restart_computer = "3. Перезагрузить компьютер"
 back_menu = "4. Вернуться в главное меню"
 
+# 5-ый пункт меню переменные
+check_dns = "1. Проверка DNS"
+check_port = "2. Проверка портов"
+check_traceroute = "3. Трассировка маршрута"
+wifi_diagnostics = "4. Диагностика Wi-Fi"
+back_diagnostics = "5. Вернуться в главное меню"
 
 
+
+# Фуекции в переменной
 os_name = platform.system()
 os_version = platform.release()
 architecture = platform.machine()
@@ -73,6 +84,7 @@ while True:
     elif choice == 2:
         print("Проверка интернет-соединения...")
         print()
+
         try:
             connection = socket.create_connection(("8.8.8.8", 53), timeout=5)
             connection.close()
@@ -169,6 +181,108 @@ while True:
     elif choice == 5:
         print("Запуск диагностики сети...")
         print()
+
+        while True:
+            print(check_dns)
+            print(check_port)
+            print(check_traceroute)
+            print(wifi_diagnostics)
+            print(back_diagnostics)
+            print()
+
+            try:
+                diagnostic_choice = int(input("Выберите действие: "))
+                print()
+            except ValueError:
+                print("Ошибка! Введите число от 1 до 5.")
+                print()
+                continue
+
+            if diagnostic_choice == 1:
+
+                while True:
+
+                    try:
+                        domain = input("Введите домен: ")
+                        ip_address = socket.gethostbyname(domain)
+                        print("IP — адрес домена:", ip_address)
+                        break
+                    except socket.gaierror:
+                        print("К сожалению, не удалось найти IP-адрес...")
+                        continue
+
+                print()
+
+            elif diagnostic_choice == 2:
+                print("Запуск проверки портов...")
+
+                while True:
+
+                    try:
+                        print()
+                        domain_name = input("Введите домен: ")
+                        server_ip = socket.gethostbyname(domain_name)
+                    except socket.gaierror:
+                        print("Не удалось найти IP-адресс!")
+                        continue
+
+
+                    try:
+                        port = int(input("Введите порт: "))
+                        print()
+                        if port < 1 or port > 65535:
+                            print("Ошибка! Введите число от 1 до 65535.")
+                            continue
+                        break
+                    except ValueError:
+                        print()
+                        print("Ошибка! Введите номер порта числом.")
+                        continue
+
+
+                try:
+                    print()
+                    connection = socket.create_connection((server_ip, port), timeout=5)
+                    print("Порт доступен!")
+                    connection.close()
+                except OSError as error:
+                    print()
+                    print("Порт не доступен!", error)
+
+
+
+                print()
+
+            elif diagnostic_choice == 3:
+                print("Запуск  трассировки маршрута...")
+                print()
+                domain = input("Введите домен: ")
+                result = subprocess.run(["tracert", domain],
+                                        capture_output=True,
+                                        text=True,
+                                        encoding="cp866",
+                                        errors="replace")
+                print(result.stdout)
+
+            elif diagnostic_choice == 4:
+                print("Запуск диагностики WI-FI... ")
+                result = subprocess.run(["netsh", "wlan", "show", "interfaces"],
+                                        capture_output=True,
+                                        text=True,
+                                        encoding="cp866",
+                                        errors="replace")
+                print(result.stdout)
+            elif diagnostic_choice == 5:
+                print("Выход в главное меню...")
+                print()
+            else:
+                print("Неверный выбор! Попробуйте снова.")
+                print()
+
+            if diagnostic_choice == 5:
+                break
+
+
     elif choice == 6:
         print("Открытие диспетчера процессов...")
         print()

@@ -6,7 +6,7 @@ import speedtest
 import os
 
 sys.stdout.reconfigure(encoding="utf-8")
-name_prog = "================== \nIT ASSISTANT v0.7\n=================="
+name_prog = "================== \nIT ASSISTANT v0.8\n=================="
 
 print()
 print(name_prog)
@@ -42,7 +42,12 @@ check_traceroute = "3. Трассировка маршрута"
 wifi_diagnostics = "4. Диагностика Wi-Fi"
 back_diagnostics = "5. Вернуться в главное меню"
 
-
+# 6-ой пункт — меню прерменные
+show_process = "1. Список процессов"
+search_process = "2. Поиск процесса"
+kill_process = "3. Завершение процесса"
+back_process = "4. Вернутся в меню"
+process_text = ""
 
 # Фуекции в переменной
 os_name = platform.system()
@@ -286,6 +291,82 @@ while True:
     elif choice == 6:
         print("Открытие диспетчера процессов...")
         print()
+
+        while True:
+
+            print()
+            print(show_process)
+            print(search_process)
+            print(kill_process)
+            print(back_process)
+            print()
+
+            try:
+                choice_process = int(input("Введите действие: "))
+                print()
+            except ValueError:
+                print("Ошибка! Введите число от 1 до 4.")
+                continue
+
+
+            if choice_process == 1:
+                print()
+                print("Запуск списка процессов...")
+                list_process = subprocess.run("tasklist", capture_output=True,
+                                              text=True,
+                                              encoding="cp866",
+                                            errors="replace")
+                process_text = list_process.stdout.lower()
+                print(list_process.stdout)
+                print()
+            elif choice_process == 2:
+                print("Запуск поиска процесса...")
+                print()
+                name_process = input("Введите имя процесса: ")
+                list_process = subprocess.run("tasklist", capture_output=True,
+                                              text=True,
+                                              encoding="cp866",
+                                              errors="replace")
+                process_text = list_process.stdout.lower()
+                print()
+                name_process = name_process.lower()
+                process_lines = process_text.splitlines()
+                for line in process_lines:
+                    if name_process in line:
+                        print(line)
+                        break
+                else:
+                    print("Процесс не найден!")
+                print()
+            elif choice_process == 3:
+                while True:
+                    try:
+                        pid = int(input("Введите PID процесса: "))
+                        print()
+                        print("Завершение процесса...")
+                        result = subprocess.run(["taskkill", "/PID", str(pid)],
+                                                capture_output=True,
+                                                text=True,
+                                                encoding="cp866",
+                                                errors="replace")
+                        print()
+                        if result.returncode == 0:
+                            print("Процесс успешно завершен!")
+                        else:
+                            print(result.stderr)
+                        break
+                    except ValueError:
+                        print("Ошибка! Введите только числа!")
+                        continue
+            elif choice_process == 4:
+                print("Возвращение в главное меню...")
+            else:
+                print("Неверный выбор! Попробуйте снова.")
+
+
+            if choice_process == 4:
+                break
+
     elif choice == 7:
         print("Запуск инструментов администратора...")
         print()

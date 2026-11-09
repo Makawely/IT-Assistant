@@ -6,7 +6,7 @@ import speedtest
 import os
 
 sys.stdout.reconfigure(encoding="utf-8")
-name_prog = "================== \nIT ASSISTANT v0.8\n=================="
+name_prog = "================== \nIT ASSISTANT v0.9\n=================="
 
 print()
 print(name_prog)
@@ -48,6 +48,8 @@ search_process = "2. Поиск процесса"
 kill_process = "3. Завершение процесса"
 back_process = "4. Вернутся в меню"
 process_text = ""
+found_pid = None
+found_process_name = None
 
 # Фуекции в переменной
 os_name = platform.system()
@@ -319,7 +321,9 @@ while True:
                 process_text = list_process.stdout.lower()
                 print(list_process.stdout)
                 print()
+
             elif choice_process == 2:
+                found_pid = None
                 print("Запуск поиска процесса...")
                 print()
                 name_process = input("Введите имя процесса: ")
@@ -333,31 +337,36 @@ while True:
                 process_lines = process_text.splitlines()
                 for line in process_lines:
                     if name_process in line:
-                        print(line)
+                        parts = line.split()
+                        found_pid = parts[1]
+                        found_process_name = parts[0]
+                        print()
+                        print("PID имя:", found_process_name)
+                        print()
+                        print("PID процесса:", found_pid)
                         break
                 else:
                     print("Процесс не найден!")
-                print()
             elif choice_process == 3:
-                while True:
-                    try:
-                        pid = int(input("Введите PID процесса: "))
-                        print()
-                        print("Завершение процесса...")
-                        result = subprocess.run(["taskkill", "/PID", str(pid)],
-                                                capture_output=True,
-                                                text=True,
-                                                encoding="cp866",
-                                                errors="replace")
-                        print()
-                        if result.returncode == 0:
-                            print("Процесс успешно завершен!")
-                        else:
-                            print(result.stderr)
-                        break
-                    except ValueError:
-                        print("Ошибка! Введите только числа!")
-                        continue
+
+                if found_pid is None:
+                    print("Сначала найдите процесс!")
+                else:
+                    pid = int(found_pid)
+                    print("Завершение процесса...")
+                    result = subprocess.run(["taskkill", "/PID", str(pid)],
+                                            capture_output=True,
+                                            text=True,
+                                            encoding="cp866",
+                                            errors="replace")
+                    print()
+                    if result.returncode == 0:
+                        print("Процесс успешно завершен!")
+                        found_pid = None
+                        found_process_name = None
+                    else:
+                        print(result.stderr)
+
             elif choice_process == 4:
                 print("Возвращение в главное меню...")
             else:

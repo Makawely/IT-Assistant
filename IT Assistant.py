@@ -4,9 +4,11 @@ import subprocess
 import sys
 import speedtest
 import os
+import shutil
+import psutil
 
 sys.stdout.reconfigure(encoding="utf-8")
-name_prog = "================== \nIT ASSISTANT v0.9\n=================="
+name_prog = "================== \nIT ASSISTANT v1.0\n=================="
 
 print()
 print(name_prog)
@@ -51,12 +53,20 @@ process_text = ""
 found_pid = None
 found_process_name = None
 
-# Фуекции в переменной
+# 7-ой пункт — меню прерменные
+clear_dns = "1. Очистка DNS-кэша"
+disk_space_check = "2. Проверка свободного места на дисках"
+device_manager = "3. Диспетчер устройств"
+back_admin = "4. Вернуться в главное меню"
+
+
+
 os_name = platform.system()
 os_version = platform.release()
 architecture = platform.machine()
 pc_name = platform.node()
 processor_name = platform.processor()
+
 
 
 while True:
@@ -379,6 +389,75 @@ while True:
     elif choice == 7:
         print("Запуск инструментов администратора...")
         print()
+        while True:
+            print(clear_dns)
+            print(disk_space_check)
+            print(device_manager)
+            print(back_admin)
+            print()
+
+            try:
+                choice_tools = int(input("Введите действие: "))
+                print()
+            except ValueError:
+                print("Ошибка! Введите число от 1 до 4.")
+                continue
+
+
+            if choice_tools == 1:
+                print("Очистка DNS-кэша...")
+                print()
+                flush = subprocess.run(["ipconfig", "/flushdns"],
+                                       capture_output=True,
+                                       text=True)
+
+                if flush.returncode == 0:
+                    print("Очистка успешно завершена!")
+                    print()
+                else:
+                    print("Ошибка при очистке DNS!")
+
+            elif choice_tools == 2:
+                print("Проверка свободного места на дисках...")
+                print()
+                partitions = psutil.disk_partitions()
+
+
+                for partition in partitions:
+                    try:
+                        usage = psutil.disk_usage(partition.device)
+
+                        total_gb = usage.total / (1024 ** 3)
+                        used_gb = usage.used / (1024 ** 3)
+                        free_gb = usage.free / (1024 ** 3)
+
+                        print(partition.device)
+                        print(f"Общий объём: {total_gb:.2f} GB")
+                        print()
+                        print(f"Занято: {used_gb:.2f} GB")
+                        print()
+                        print(f"Свободно: {free_gb:.2f} GB")
+                        print()
+                    except OSError:
+                        print(f"Диск {partition.device} недоступен, пропускаем.")
+                        print()
+
+
+            elif choice_tools == 3:
+                print("Открытие диспетчера устройств...")
+                os.startfile("devmgmt.msc")
+                print()
+
+            elif choice_tools == 4:
+                print("Возврат в главное меню...")
+            else:
+                print("Неверный выбор! Попробуйте снова.")
+
+            if choice_tools == 4:
+                break
+
+
+
     elif choice == 8:
         print("Выполняется выход...")
 
